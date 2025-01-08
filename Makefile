@@ -2,7 +2,7 @@ ifeq (cmd, $(firstword $(MAKECMDGOALS)))
   runargs := $(wordlist 2, $(words $(MAKECMDGOALS)), $(MAKECMDGOALS))
   $(eval $(runargs):;@true)
   ifeq ($(runargs),)
-	runargs := code-review bash
+	runargs := backend bash
   endif
 endif
 
@@ -20,3 +20,6 @@ stop:
 
 cmd:
 	docker compose run $(runargs)
+
+test:
+	docker compose run --rm backend pytest -p no:warnings --asyncio-mode=auto

@@ -28,3 +28,4 @@ venv.bak/
 cython_debug/
 .idea/
 *xml
+*.coverage
