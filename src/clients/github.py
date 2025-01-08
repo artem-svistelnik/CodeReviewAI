@@ -4,6 +4,7 @@ from fastapi import HTTPException
 from github3.repos import Repository
 
 from app.core.config import settings
+from app.core.logger import logger
 
 
 class GitHubClient:
@@ -39,6 +40,7 @@ class GitHubClient:
         repository: Repository = self.client.repository(owner, repo_name)
 
         if not repository:
+            logger.info(f"Repository {owner}/{repo_name} not found or access denied.")
             raise HTTPException(
                 status_code=404,
                 detail=f"Repository {owner}/{repo_name} not found or access denied.",
@@ -53,6 +55,7 @@ class GitHubClient:
                 )
             except Exception as e:
                 file["content"] = None
+                logger.info(f"Error retrieving content for file {file['path']}: {e}")
                 raise HTTPException(
                     status_code=422,
                     detail=f"Error retrieving content for file {file['path']}: {e}",

@@ -6,6 +6,7 @@ from fastapi import Depends
 from app.core.dependencies import get_github_client
 from app.core.dependencies import get_openai_client
 from app.core.dependencies import get_redis_connection
+from app.core.logger import logger
 from clients.github import GitHubClient
 from clients.openai import OpenAIClient
 from schemas.review import CandidateLevel
@@ -29,6 +30,7 @@ async def review(
 
     cached_review = await redis.get(cache_key)
     if cached_review:
+        logger.info(f"Return cached result")
         return {"review": cached_review}
 
     files = github_client.get_repo_files(str(review_request.github_repo_url))

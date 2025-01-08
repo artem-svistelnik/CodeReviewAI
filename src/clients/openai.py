@@ -3,6 +3,7 @@ from openai import OpenAI
 from openai import OpenAIError
 
 from app.core.config import settings
+from app.core.logger import logger
 
 
 class OpenAIClient:
@@ -23,11 +24,12 @@ class OpenAIClient:
 
         except OpenAIError as e:
             if e.status_code == 429:
+                logger.info(f"OpenIA rate limit error: {e.code}")
                 raise HTTPException(
                     status_code=e.response.status_code,
                     detail=f"OpenIA rate limit error: {e.code}",
                 )
-
+            logger.info(f"Openia error: {e.code}")
             raise HTTPException(
                 status_code=e.response.status_code, detail=f"Openia error: {e.code}"
             )
